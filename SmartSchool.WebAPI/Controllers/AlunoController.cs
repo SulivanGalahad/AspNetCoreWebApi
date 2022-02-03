@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
 using SmartSchool.WebAPI.Models;
 using System.Linq;
+using SmartSchool.WebAPI.Data;
 
 namespace SmartSchool.WebAPI.Controllers
 {
@@ -9,31 +10,31 @@ namespace SmartSchool.WebAPI.Controllers
     [Route("api/[controller]")]
     public class AlunoController : ControllerBase
     {
+        private readonly SmartContext _context;
 
-        public List<Aluno> listaAlunos = new List<Aluno>(){
-            new Aluno(){Id = 1, Nome = "Jerifona", Sobrenome = "Caliperson", Telefone = "56465465465"},
-            new Aluno(){Id = 2, Nome = "Larisberto", Sobrenome = "Xelopintro", Telefone = "98798798789"},
-            new Aluno(){Id = 3, Nome = "Claudistirno", Sobrenome = "Freximontuin", Telefone = "54654987846"}
-        };
-        public AlunoController(){}
+        public AlunoController(SmartContext context)
+        {
+            _context = context;
+        }
 
-       [HttpGet]
+        [HttpGet]
         public IActionResult Get()
         {
-            return Ok(listaAlunos);
+            return Ok(_context.Alunos);
         }
 
         // http://localhost:5000/api/aluno/1 
          [HttpGet("{id:int}")]
         public IActionResult GetById(int id)
         {
-            var aluno = listaAlunos.FirstOrDefault(a => a.Id == id);
+            var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
             if (aluno == null)
             {
                 return BadRequest("Nunca nem vi!");
             }
             return Ok(aluno);
         }
+        
 
        /*  [HttpGet("byId")]  or [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
@@ -63,7 +64,7 @@ namespace SmartSchool.WebAPI.Controllers
           [HttpGet("ByName")]
         public IActionResult GetByName(string nome, string sobreNome)
         {
-            var aluno = listaAlunos.FirstOrDefault(a => a.Nome.Contains(nome) ||
+            var aluno = _context.Alunos.FirstOrDefault(a => a.Nome.Contains(nome) ||
                                                         a.Nome.Contains(sobreNome));
 
             if (aluno == null)
