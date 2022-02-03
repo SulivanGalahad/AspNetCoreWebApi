@@ -34,7 +34,7 @@ namespace SmartSchool.WebAPI.Controllers
             }
             return Ok(aluno);
         }
-        
+
 
        /*  [HttpGet("byId")]  or [HttpGet("byId/{id}")]
         public IActionResult GetById(int id)
@@ -77,24 +77,47 @@ namespace SmartSchool.WebAPI.Controllers
         [HttpPost]
         public IActionResult Post(Aluno aluno)
         {
+            _context.Add(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, Aluno aluno)
         {
+            var alunox = _context.Alunos.FirstOrDefault(a => a.Id == id);
+             if (alunox == null)
+             {
+                 return BadRequest("Nunca nem vi!");
+             }
+            _context.Update(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
          [HttpPatch("{id}")]
         public IActionResult Patch(int id, Aluno aluno)
         {
+             var alunox = _context.Alunos.FirstOrDefault(a => a.Id == id);
+             if (alunox == null)
+             {
+                 return BadRequest("Nunca nem vi!");
+             }
+            _context.Update(aluno);
+            _context.SaveChanges();
             return Ok(aluno);
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+             var aluno = _context.Alunos.FirstOrDefault(a => a.Id == id);
+             if (aluno == null)
+             {
+                 return BadRequest("Nunca nem vi!");
+             }
+             _context.Remove(aluno);
+            _context.SaveChanges();
             return Ok();
         }
 
